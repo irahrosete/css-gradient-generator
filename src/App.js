@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import './App.css';
 
 const StyledMain = styled.main`
-  background-color: ${props => props.backgroundColor};
+  background-color: ${props => props.backgroundColor[0]};
   font-family: 'Courier New', Courier, monospace;
   display: flex;
   flex-direction: column;
@@ -14,13 +14,17 @@ const StyledMain = styled.main`
 
 class App extends Component {
   state = {
-    backgroundColor: "#234fde"
+    backgroundColor: ["#c0c0c0", "#c0c0c0", "#c0c0c0"]
   }
 
-  handleColorChange = (event) => {
+  handleColorChange = (event, i) => {
     const newColor = event.target.value
-    // console.log(newColor)
-    this.setState({ backgroundColor: newColor})
+    // create a copy of the backgroundColor array
+    const newBackgroundColor = [...this.state.backgroundColor]
+    // change the value of the array to the new color
+    newBackgroundColor[i] = newColor
+    console.log(newColor)
+    this.setState({ backgroundColor: newBackgroundColor})
   }
 
 	render() {
@@ -28,7 +32,13 @@ class App extends Component {
 		return (
 			<StyledMain backgroundColor={backgroundColor}>
 				<h1>CSS Gradient Generator</h1>
-				<input type="color" value={backgroundColor} onChange={this.handleColorChange} />
+        {backgroundColor.map((color, i) => {
+          return (
+            <input type="color"
+              value={color}
+              onChange={(event) => this.handleColorChange(event, i)} />
+          )
+        })}
 			</StyledMain>
 		)
 	}
