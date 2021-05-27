@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import './App.css';
 
@@ -36,6 +36,25 @@ const App = () => {
     setBackgroundColors(newBackgroundColors)
   }
 
+  const addColor = () => {
+    // clone the existing colors array
+    const newBackgroundColors = [...backgroundColors]
+    // add a new color to the end
+    newBackgroundColors.push("#ffffff")
+    // set it into state
+    setBackgroundColors(newBackgroundColors)
+  }
+
+  const removeColor = (i) => {
+    // clone the background color array
+    const newBackgroundColors = [...backgroundColors]
+    // remove the element index i
+    newBackgroundColors.splice(i, 1)
+    // set new array into state
+    setBackgroundColors(newBackgroundColors)
+
+  }
+
   const backgroundCSS = generateBackgroundCSS(backgroundColors)
 
   return (
@@ -43,13 +62,17 @@ const App = () => {
       <h1>CSS Gradient Generator</h1>
       {backgroundColors.map((color, i) => {
         return (
-          <input type="color"
-            value={color}
-            onChange={(event) => handleColorChange(event, i)}
-            key={i}
-          />
+          <React.Fragment key={`${i}${color}`}>
+            <input type="color"
+              value={color}
+              onChange={(event) => handleColorChange(event, i)}
+              key={i}
+            />
+            {backgroundColors.length > 2 && <button onClick={() => removeColor(i)}>remove</button>}
+          </React.Fragment>
         )
       })}
+      <button onClick={addColor}>Add a color</button>
       <p>
         Your CSS is:
       </p>
