@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import './App.css';
 
@@ -23,8 +23,34 @@ export const generateBackgroundCSS = (backgroundColors) => {
   return output
 }
 
+const updateLocalStorage = (state) => {
+  // JSON stringify the state
+  const stringState = JSON.stringify(state)
+  // save string to localStorage
+  localStorage.setItem('backgroundColors', stringState)
+}
+
+const getFromLocalStorage = () => {
+  const colors = localStorage.getItem('backgroundColors')
+  if (!colors) {
+    return null
+  }
+  return JSON.parse(colors)
+}
+
 const App = () => {
   const [backgroundColors, setBackgroundColors] = useState(["#efefef", "#efefef", "#efefef"])
+
+  useEffect(() => {
+    const colors = getFromLocalStorage()
+    if (colors) {
+      setBackgroundColors(colors)
+    }
+  }, [])
+
+  useEffect(() => {
+    updateLocalStorage(backgroundColors)
+  }, [backgroundColors])
 
   const handleColorChange = (event, i) => {
     const newColor = event.target.value
